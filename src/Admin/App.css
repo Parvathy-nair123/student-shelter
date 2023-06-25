@@ -34,13 +34,13 @@
   background: var(--glass);
   border-radius: 2rem;
   gap: 16px;
-  grid-template-columns: 11rem auto 20rem;
+  grid-template-columns: 11rem auto 10px;
   overflow: hidden;
 }
 
 @media screen and (max-width: 1200px) {
   .AdminAppGlass{
-    grid-template-columns: 10% 50% auto;
+    grid-template-columns: 10% 50% 10px;
     overflow-y: scroll;
   } 
 }

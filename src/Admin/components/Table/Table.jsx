@@ -8,15 +8,15 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./Table.css";
 
-function createData(name, trackingId, date, status) {
-  return { name, trackingId, date, status };
+function createData(name, contact, email, location) {
+  return { name, contact, email, location };
 }
 
 const rows = [
-  createData("Lasania Chiken Fri", 18908424, "2 March 2022", "Approved"),
-  createData("Big Baza Bang ", 18908424, "2 March 2022", "Pending"),
-  createData("Mouth Freshner", 18908424, "2 March 2022", "Approved"),
-  createData("Cupcake", 18908421, "2 March 2022", "Delivered"),
+  createData("Jonathan", "+44 (0) 1223 456979" , "jonathan@gmail.com", "London"),
+  createData("Emily ", "+44 (0) 1463 39345679 ", "emily@gmail.com", "England"),
+  createData("Tony Stark", "+44 (0) 1223 3123979 ", "tony@gmail.com", "Scotland"),
+  createData("Jenny", "+44 (0) 1433 39479 ", "jenny@gmail.com", "Wales"),
 ];
 
 
@@ -46,7 +46,7 @@ const makeStyle=(status)=>{
 export default function BasicTable() {
   return (
       <div className="Table">
-      <h3>Recent Orders</h3>
+      <h3>Recent Registered Landloards</h3>
         <TableContainer
           component={Paper}
           style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
@@ -54,28 +54,28 @@ export default function BasicTable() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Product</TableCell>
-                <TableCell align="left">Tracking ID</TableCell>
-                <TableCell align="left">Date</TableCell>
-                <TableCell align="left">Status</TableCell>
-                <TableCell align="left"></TableCell>
+                <TableCell>#</TableCell>
+                <TableCell align="left">Name</TableCell>
+                <TableCell align="left">Contact</TableCell>
+                <TableCell align="left">Email</TableCell>
+                <TableCell align="left">Location</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ color: "white" }}>
-              {rows.map((row) => (
+              {rows.map((row,key) => (
                 <TableRow
-                  key={row.name}
+                  key={key+1}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {row.name}
+                    {key+1}
                   </TableCell>
-                  <TableCell align="left">{row.trackingId}</TableCell>
-                  <TableCell align="left">{row.date}</TableCell>
+                  <TableCell align="left">{row.name}</TableCell>
+                  <TableCell align="left">{row.contact}</TableCell>
                   <TableCell align="left">
-                    <span className="status" style={makeStyle(row.status)}>{row.status}</span>
+                    <span className="status" style={makeStyle(row.status)}>{row.email}</span>
                   </TableCell>
-                  <TableCell align="left" className="Details">Details</TableCell>
+                  <TableCell align="left" className="Details">{row.location}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

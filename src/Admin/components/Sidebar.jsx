@@ -1,39 +1,42 @@
 import React, { useState } from "react";
 import "./Sidebar.css";
-import Logo from "../imgs/logo.png";
 import { UilSignOutAlt } from "@iconscout/react-unicons";
 import { SidebarData } from "../Data/Data";
 import { UilBars } from "@iconscout/react-unicons";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const [selected, setSelected] = useState(0);
 
-  const [expanded, setExpaned] = useState(true)
+  const [expanded, setExpaned] = useState(true);
 
   const sidebarVariants = {
     true: {
-      left: '0'
+      left: "0",
     },
     false: {
-      left: '-60%'
-    }
-  }
-  console.log(window.innerWidth)
+      left: "-60%",
+    },
+  };
   return (
     <>
-      <div className="bars" style={expanded ? { left: '60%' } : { left: '5%' }} onClick={() => setExpaned(!expanded)}>
+      <div
+        className="bars"
+        style={expanded ? { left: "60%" } : { left: "5%" }}
+        onClick={() => setExpaned(!expanded)}
+      >
         <UilBars />
       </div>
-      <motion.div className='sidebar'
+      <motion.div
+        className="sidebar"
         variants={sidebarVariants}
-        animate={window.innerWidth <= 768 ? `${expanded}` : ''}
+        animate={window.innerWidth <= 768 ? `${expanded}` : ""}
       >
         {/* logo */}
         <div className="logo">
-          <img src={Logo} alt="logo" />
           <span>
-            Sh<span>o</span>ps
+            <span>She</span>lter
           </span>
         </div>
 
@@ -46,7 +49,9 @@ const Sidebar = () => {
                 onClick={() => setSelected(index)}
               >
                 <item.icon />
-                <span>{item.heading}</span>
+                <Link to={item.path}>
+                  <span>{item.heading}</span>
+                </Link>
               </div>
             );
           })}
