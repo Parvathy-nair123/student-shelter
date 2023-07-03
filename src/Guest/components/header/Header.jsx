@@ -1,34 +1,20 @@
 import { faBed } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./header.css";
-import { useState } from "react";
-import "react-date-range/dist/styles.css"; // main css file
+import Login from "../../pages/Forms/Login";
+import "react-date-range/dist/styles.css"; 
 import "react-date-range/dist/theme/default.css";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Header = ({ type }) => {
-  const [destination, setDestination] = useState("");
-  const [options, setOptions] = useState({
-    adult: 1,
-    children: 0,
-    room: 1,
-  });
-
-  const navigate = useNavigate();
-
-  const handleOption = (name, operation) => {
-    setOptions((prev) => {
-      return {
-        ...prev,
-        [name]: operation === "i" ? options[name] + 1 : options[name] - 1,
-      };
-    });
+  const [loginModel, setLoginModel] = useState(false);
+  const loginOpen = () => {
+    setLoginModel(true);
   };
 
-  const handleSearch = () => {
-    navigate("/hotels", { state: { destination, options } });
+  const loginClose = () => {
+    setLoginModel(false);
   };
-
   return (
     <div className="header">
       <div
@@ -45,7 +31,7 @@ const Header = ({ type }) => {
             <p className="headerDesc">
               Find your perfect Home, and create lifelong memories
             </p>
-            <button className="headerBtn">Sign in / Register</button>
+            <button className="headerBtn" onClick={loginOpen}>Sign in / Register</button>
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />
@@ -53,18 +39,18 @@ const Header = ({ type }) => {
                   type="text"
                   placeholder="Enter Your Location"
                   className="headerSearchInput"
-                  onChange={(e) => setDestination(e.target.value)}
                 />
               </div>
 
               <div className="headerSearchItem">
-                <button className="headerBtn" onClick={handleSearch}>
+                <button className="headerBtn" onClick={loginOpen}>
                   Search
                 </button>
               </div>
             </div>
           </>
         )}
+        <Login isOpen={loginModel} onClose={loginClose} />
       </div>
     </div>
   );
