@@ -7,58 +7,26 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./Shelter.css";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../../../config/firebase";
 
-function createData(name, contact, email, location) {
-  return { name, contact, email, location };
-}
-
-const rows = [
-  createData(
-    "Jonathan's Villa",
-    "+44 (0) 1223 456979",
-    "jonathan@gmail.com",
-    "London"
-  ),
-  createData(
-    "Emily's Villa",
-    "+44 (0) 1463 39345679 ",
-    "emily@gmail.com",
-    "England"
-  ),
-  createData(
-    "Tony Stark's Villa",
-    "+44 (0) 1223 3123979 ",
-    "tony@gmail.com",
-    "Scotland"
-  ),
-  createData(
-    "Jenny's Villa",
-    "+44 (0) 1433 39479 ",
-    "jenny@gmail.com",
-    "Wales"
-  ),
-];
-
-const makeStyle = (status) => {
-  if (status === "Approved") {
-    return {
-      background: "rgb(145 254 159 / 47%)",
-      color: "green",
-    };
-  } else if (status === "Pending") {
-    return {
-      background: "#ffadad8f",
-      color: "red",
-    };
-  } else {
-    return {
-      background: "#59bfff",
-      color: "white",
-    };
-  }
-};
 
 export default function BasicTable() {
+  const [propertiesList, setpropertiesList] = React.useState([]);
+
+  React.useEffect(() => {
+    getCount();
+  }, []);
+
+  const getCount = async () => {
+    const propertiesCountQuerySnapshot = await getDocs(
+      query(collection(db, "properties"))
+    );
+    if (propertiesCountQuerySnapshot.docs.length > 0) {
+      const data = propertiesCountQuerySnapshot.docs.map((doc) => doc.data());
+      setpropertiesList(data);
+    }
+  };
   return (
     <div className="Table">
       <h3>All Shelters</h3>
@@ -66,18 +34,18 @@ export default function BasicTable() {
         component={Paper}
         style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
       >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 650,overflowY :"scroll" }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell align="left">Name</TableCell>
-              <TableCell align="left">Contact</TableCell>
-              <TableCell align="left">Email</TableCell>
-              <TableCell align="left">Location</TableCell>
+              <TableCell align="left">Place</TableCell>
+              <TableCell align="left">Price</TableCell>
+              <TableCell align="left">Rooms</TableCell>
             </TableRow>
           </TableHead>
           <TableBody style={{ color: "white" }}>
-            {rows.map((row, key) => (
+            {propertiesList.map((row, key) => (
               <TableRow
                 key={key + 1}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -85,16 +53,12 @@ export default function BasicTable() {
                 <TableCell component="th" scope="row">
                   {key + 1}
                 </TableCell>
-                <TableCell align="left">{row.name}</TableCell>
-                <TableCell align="left">{row.contact}</TableCell>
+                <TableCell align="left">{row.property_name}</TableCell>
+                <TableCell align="left">{row.property_place}</TableCell>
                 <TableCell align="left">
-                  <span className="status" style={makeStyle(row.status)}>
-                    {row.email}
-                  </span>
+                  <span className="status" >{row.property_price}</span>
                 </TableCell>
-                <TableCell align="left" className="Details">
-                  {row.location}
-                </TableCell>
+                <TableCell align="left" className="Details">{row.property_rooms}</TableCell>
               </TableRow>
             ))}
           </TableBody>
