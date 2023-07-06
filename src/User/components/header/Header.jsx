@@ -11,7 +11,10 @@ const Header = () => {
   const [destination, setDestination] = useState("");
   const navigate = useNavigate();
   const handleSearch = () => {
-    navigate("/User/Search", { state: { destination } });
+    if (destination != "") {
+      navigate("/User/Search", { state: { destination } });
+    }
+
   };
   return (
     <div className="header">

@@ -6,7 +6,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 const Search = () => {
     const location = useLocation();
-    const [place, setPlace] = useState(location.state.destination);
+    const [place, setPlace] = useState(location.state.destination.toLowerCase());
     const [propertyList, setPropertyList] = useState([]);
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");

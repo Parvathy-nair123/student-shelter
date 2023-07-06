@@ -59,7 +59,7 @@ const AddPropertyForm = () => {
             errors.push('Place is required.');
         }
 
-        if (!pincode || !/^\d{6}$/.test(pincode)) {
+        if (!pincode) {
             errors.push('Pincode is required and must be a 6-digit number.');
         }
 
@@ -101,7 +101,7 @@ const AddPropertyForm = () => {
         await addDoc(propertyCollectionRef, {
             landlord_id: landlordId,
             property_name: name,
-            property_place: place,
+            property_place: place.toLowerCase(),
             property_pincode: pincode,
             property_latitude: selectedLatitude,
             property_longitude: selectedLongitude,
@@ -113,6 +113,7 @@ const AddPropertyForm = () => {
             property_price: price,
             property_furnished: furnished,
             property_renttype: rentType,
+            property_status: 0,
             timestamp:serverTimestamp()
         });
 
