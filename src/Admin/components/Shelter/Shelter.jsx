@@ -27,6 +27,17 @@ export default function BasicTable() {
       setpropertiesList(data);
     }
   };
+
+  const updateStatus = async () => {
+    const propertiesCountQuerySnapshot = await getDocs(
+      query(collection(db, "properties"))
+    );
+    if (propertiesCountQuerySnapshot.docs.length > 0) {
+      const data = propertiesCountQuerySnapshot.docs.map((doc) => doc.data());
+      setpropertiesList(data);
+    }
+  };
+  
   return (
     <div className="Table">
       <h3>All Shelters</h3>
@@ -34,7 +45,7 @@ export default function BasicTable() {
         component={Paper}
         style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
       >
-        <Table sx={{ minWidth: 650,overflowY :"scroll" }} aria-label="simple table">
+        <Table sx={{ minWidth: 650, overflowY: "scroll" }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
@@ -42,6 +53,7 @@ export default function BasicTable() {
               <TableCell align="left">Place</TableCell>
               <TableCell align="left">Price</TableCell>
               <TableCell align="left">Rooms</TableCell>
+              <TableCell align="left">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody style={{ color: "white" }}>
@@ -58,7 +70,18 @@ export default function BasicTable() {
                 <TableCell align="left">
                   <span className="status" >{row.property_price}</span>
                 </TableCell>
-                <TableCell align="left" className="Details">{row.property_rooms}</TableCell>
+                <TableCell align="left">
+                  <span className="status" >{row.property_rooms}</span>
+                </TableCell>
+                <TableCell align="left" className="Details">
+                  {
+                  row.property_status==0?<>
+                    <button>Approve</button> | <button>Delete</button>
+                  </>:<>
+                    <button>Delete</button>
+                  </>
+                }
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
