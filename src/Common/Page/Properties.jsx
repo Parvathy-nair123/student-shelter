@@ -1,5 +1,5 @@
-import React from 'react'
-import '../Style/style.css'
+import React from "react";
+import "../Style/style.css";
 
 export default function Properties() {
   return (
@@ -61,6 +61,5 @@ export default function Properties() {
         </div>
       </div>
     </div>
-
-  )
+  );
 }
