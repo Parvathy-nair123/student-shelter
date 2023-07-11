@@ -1,11 +1,15 @@
+
+
+
 .searchItem {
+  position: relative;
     border: 1px solid lightgray;
     padding: 10px;
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    margin-bottom: 20px;
+    margin: 40px;
   }
   
   .siImg {
@@ -107,3 +111,23 @@
     cursor: pointer;
     border-radius: 5px;
   }
+
+  .removeButton {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  
+  .removeButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1000;
+  }
+  
+  

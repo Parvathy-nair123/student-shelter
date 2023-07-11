@@ -21,18 +21,60 @@ const Search = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      const initialQuerySnapshot = await getDocs(
+      const searchQuery = place.toLowerCase();
+
+      const lowercaseQuerySnapshot = await getDocs(
         query(
           collection(db, "properties"),
-          where("property_place", "==", place)
+          where("property_place", ">=", searchQuery),
+          where("property_place", "<=", searchQuery + "\uf8ff")
         )
       );
-      const data = initialQuerySnapshot.docs.map((doc) => ({
+
+      const capitalizedQuerySnapshot = await getDocs(
+        query(
+          collection(db, "properties"),
+          where("property_place", ">=", capitalizeFirstLetter(searchQuery)),
+          where(
+            "property_place",
+            "<=",
+            capitalizeFirstLetter(searchQuery) + "\uf8ff"
+          )
+        )
+      );
+
+      const uppercaseQuerySnapshot = await getDocs(
+        query(
+          collection(db, "properties"),
+          where("property_place", ">=", searchQuery.toUpperCase()),
+          where("property_place", "<=", searchQuery.toUpperCase() + "\uf8ff")
+        )
+      );
+
+      const lowercaseData = lowercaseQuerySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
+
+      const uppercaseData = uppercaseQuerySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      const capitalizedData = capitalizedQuerySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      const data = [...lowercaseData, ...capitalizedData, ...uppercaseData];
+
       setPropertyList(data);
     };
+
+    const capitalizeFirstLetter = (str) => {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     fetchData();
   }, [place]);
   const searchRooms = async () => {
@@ -172,8 +214,14 @@ const Search = () => {
           </div>
           <div className="listResult">
             {propertyList.map((item, key) => (
-              <div className="searchItem" onClick={() => viewProperty(item.id)}>
-                <img src={item.property_photo} alt="" className="siImg" />
+              <div
+                className="searchItem"
+                onClick={() => viewProperty(item.id)}
+                key={key}
+              >
+                {item.property_photos && item.property_photos.length > 0 && (
+                  <img src={item.property_photos[0]} className="siImg" />
+                )}
                 <div className="siDesc">
                   <h1 className="siTitle">{item.property_name}</h1>
                   <span className="siSubtitle">{item.property_place}</span>

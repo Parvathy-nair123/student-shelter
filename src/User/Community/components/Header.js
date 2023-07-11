@@ -26,86 +26,46 @@ const Header = ({ active, setActive, user, handleLogout }) => {
               id="navbarSupportedContent"
             >
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <Link to="/Blog" style={{ textDecoration: "none" }}>
+                <Link to="/User" style={{ textDecoration: "none" }}>
                   <li
-                    className={`nav-item nav-link ${
-                      active === "home" ? "active" : ""
-                    }`}
+                    className={`nav-item nav-link ${active === "home" ? "active" : ""
+                      }`}
                     onClick={() => setActive("home")}
                   >
                     Home
                   </li>
                 </Link>
-                <Link to="/Blog/blogs" style={{ textDecoration: "none" }}>
+                <Link to="/Community" style={{ textDecoration: "none" }}>
                   <li
-                    className={`nav-item nav-link ${
-                      active === "blogs" ? "active" : ""
-                    }`}
+                    className={`nav-item nav-link ${active === "timeline" ? "active" : ""
+                      }`}
+                    onClick={() => setActive("timeline")}
+                  >
+                    Timeline
+                  </li>
+                </Link>
+                <Link to="/Community/Blog/blogs" style={{ textDecoration: "none" }}>
+                  <li
+                    className={`nav-item nav-link ${active === "blogs" ? "active" : ""
+                      }`}
                     onClick={() => setActive("blogs")}
                   >
                     Blogs
                   </li>
                 </Link>
 
-                <Link to="/Blog/create" style={{ textDecoration: "none" }}>
+                <Link to="/Community/Blog/create" style={{ textDecoration: "none" }}>
                   <li
-                    className={`nav-item nav-link ${
-                      active === "create" ? "active" : ""
-                    }`}
+                    className={`nav-item nav-link ${active === "create" ? "active" : ""
+                      }`}
                     onClick={() => setActive("create")}
                   >
                     Create
                   </li>
                 </Link>
 
-                <Link to="/Blog/about" style={{ textDecoration: "none" }}>
-                  <li
-                    className={`nav-item nav-link ${
-                      active === "about" ? "active" : ""
-                    }`}
-                    onClick={() => setActive("about")}
-                  >
-                    About
-                  </li>
-                </Link>
               </ul>
-              <div className="row g-3">
-                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                  {userId ? (
-                    <>
-                      <div className="profile-logo">
-                        <img
-                          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                          alt="logo"
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            marginTop: "12px",
-                          }}
-                        />
-                      </div>
-                      <p style={{ marginTop: "12px", marginLeft: "5px" }}>
-                        {user?.displayName}
-                      </p>
-                      <li className="nav-item nav-link" onClick={handleLogout}>
-                        Logout
-                      </li>
-                    </>
-                  ) : (
-                    <Link to="/Blog/auth" style={{ textDecoration: "none" }}>
-                      <li
-                        className={`nav-item nav-link ${
-                          active === "login" ? "active" : ""
-                        }`}
-                        onClick={() => setActive("login")}
-                      >
-                        Login
-                      </li>
-                    </Link>
-                  )}
-                </ul>
-              </div>
+
             </div>
           </nav>
         </div>

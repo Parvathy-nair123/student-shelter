@@ -57,7 +57,11 @@ $yellow:#f5bc04;
 	@include clip-path(polygon(100% 0, 100% 85%, 14% 85%, 0 100%, 0% 60%, 0 0));
 }
 .navbar-light .navbar-nav .nav-link {
-	color: #222!important;
+	color: white;
+}
+
+.navbar-light .navbar-nav .nav-link {
+	// color: #222!important;
 	padding-top: 12px!important;
 	padding-bottom: 15px!important;
 	padding-left: 20px!important;

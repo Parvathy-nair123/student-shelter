@@ -9,7 +9,7 @@ import Favourite from "./Main/pages/Favourite";
 import Properties from "../Common/Page/Properties";
 
 function App() {
-  
+
 
   return (
     <div>
@@ -18,11 +18,12 @@ function App() {
       <div className="homeContainer">
         <Routes>
           <Route path="/" element={
-            <Properties/>
+            <Properties />
           } />
           <Route path="/Search" element={<Search />} />
           <Route path="/ViewMore/:id" element={<ViewMore />} />
           <Route path="/Favourite" element={<Favourite />} />
+
         </Routes>
         <MailList />
         <Footer />
