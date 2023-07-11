@@ -40,7 +40,7 @@ function App() {
         />
         <Route
           path="/create"
-          element={<AddEditBlog />}
+          element={<AddEditBlog setActive={setActive} />}
         />
         <Route
           path="/update/:id"
