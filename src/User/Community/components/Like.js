@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Tooltip } from "bootstrap";
 
-const Like = ({ handleLike, likes, userId }) => {
+const Like = ({ handleLike, likes }) => {
+  const userId = sessionStorage.getItem("uid");
   useEffect(() => {
     let tooltipTriggerList = [].slice.call(
       document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -38,21 +39,11 @@ const Like = ({ handleLike, likes, userId }) => {
         style={{ float: "right", cursor: "pointer", marginTop: "-7px" }}
         onClick={!userId ? null : handleLike}
       >
-        {!userId ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            title="Please Login to like post"
-          >
-            <LikeStatus />
-          </button>
-        ) : (
-          <button type="button" className="btn btn-primary">
-            <LikeStatus />
-          </button>
-        )}
+
+        <button type="button" className="btn btn-primary">
+          <LikeStatus />
+        </button>
+
       </span>
     </>
   );

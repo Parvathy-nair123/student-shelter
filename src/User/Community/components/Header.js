@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Header = ({ active, setActive }) => {
+const Header = () => {
+
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -27,37 +28,28 @@ const Header = ({ active, setActive }) => {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <Link to="/User" style={{ textDecoration: "none" }}>
                   <li
-                    className={`nav-item nav-link ${active === "home" ? "active" : ""
-                      }`}
-                    onClick={() => setActive("home")}
+                    className={`nav-item nav-link`}
                   >
                     Home
                   </li>
                 </Link>
                 <Link to="/Community" style={{ textDecoration: "none" }}>
                   <li
-                    className={`nav-item nav-link ${active === "timeline" ? "active" : ""
-                      }`}
-                    onClick={() => setActive("timeline")}
-                  >
+                    className={`nav-item nav-link`}>
                     Timeline
                   </li>
                 </Link>
-                <Link to="/Community/Blog/blogs" style={{ textDecoration: "none" }}>
+                <Link to="/Community/blogs" style={{ textDecoration: "none" }}>
                   <li
-                    className={`nav-item nav-link ${active === "blogs" ? "active" : ""
-                      }`}
-                    onClick={() => setActive("blogs")}
+                    className={`nav-item nav-link`}
                   >
                     Blogs
                   </li>
                 </Link>
 
-                <Link to="/Community/Blog/create" style={{ textDecoration: "none" }}>
+                <Link to="/Community/create" style={{ textDecoration: "none" }}>
                   <li
-                    className={`nav-item nav-link ${active === "create" ? "active" : ""
-                      }`}
-                    onClick={() => setActive("create")}
+                    className={`nav-item nav-link`}
                   >
                     Create
                   </li>

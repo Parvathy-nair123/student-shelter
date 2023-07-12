@@ -24,8 +24,8 @@ import UserComments from "../components/UserComments";
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
 
-const Detail = ({ setActive, user }) => {
-  const userId = user?.uid;
+const Detail = () => {
+  const userId = sessionStorage.getItem("uid");
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [blog, setBlog] = useState(null);
@@ -35,30 +35,6 @@ const Detail = ({ setActive, user }) => {
   let [likes, setLikes] = useState([]);
   const [userComment, setUserComment] = useState("");
   const [relatedBlogs, setRelatedBlogs] = useState([]);
-
-  useEffect(() => {
-    const getRecentBlogs = async () => {
-      const blogRef = collection(db, "blogs");
-      const recentBlogs = query(
-        blogRef,
-        orderBy("timestamp", "desc"),
-        limit(5)
-      );
-      const docSnapshot = await getDocs(recentBlogs);
-      setBlogs(docSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-    };
-
-    getRecentBlogs();
-  }, []);
-
-  useEffect(() => {
-    id && getBlogDetail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
-
-  if (loading) {
-    return <Spinner />;
-  }
 
   const getBlogDetail = async () => {
     setLoading(true);
@@ -71,61 +47,85 @@ const Detail = ({ setActive, user }) => {
     let uniqueTags = [...new Set(tags)];
     setTags(uniqueTags);
     setBlog(blogDetail.data());
-    const relatedBlogsQuery = query(
-      blogRef,
-      where("tags", "array-contains-any", blogDetail.data().tags, limit(3))
-    );
-    setComments(blogDetail.data().comments ? blogDetail.data().comments : []);
-    setLikes(blogDetail.data().likes ? blogDetail.data().likes : []);
-    const relatedBlogSnapshot = await getDocs(relatedBlogsQuery);
-    const relatedBlogs = [];
-    relatedBlogSnapshot.forEach((doc) => {
-      relatedBlogs.push({ id: doc.id, ...doc.data() });
-    });
-    setRelatedBlogs(relatedBlogs);
-    setActive(null);
+    const blogTags = blogDetail.data().tags || []; // Ensure tags array exists
+    if (blogTags.length > 0) { // Check if tags array is non-empty
+      const relatedBlogsQuery = query(
+        blogRef,
+        where("tags", "array-contains-any", ...blogTags),
+        orderBy("timestamp", "desc")
+      );
+      const limitedRelatedBlogsQuery = limit(relatedBlogsQuery, 3);
+      const relatedBlogSnapshot = await getDocs(limitedRelatedBlogsQuery);
+      const relatedBlogs = relatedBlogSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setRelatedBlogs(relatedBlogs);
+    }
+    setComments(blogDetail.data().comments || []);
+    setLikes(blogDetail.data().likes || []);
     setLoading(false);
   };
 
+  useEffect(() => {
+    const getRecentBlogs = async () => {
+      const blogRef = collection(db, "blogs");
+      const recentBlogsQuery = query(
+        blogRef,
+        orderBy("timestamp", "desc"),
+        limit(5)
+      );
+      const docSnapshot = await getDocs(recentBlogsQuery);
+      const recentBlogs = docSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setBlogs(recentBlogs);
+    };
+
+    getRecentBlogs();
+  }, []);
+
+  useEffect(() => {
+    id && getBlogDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
   const handleComment = async (e) => {
     e.preventDefault();
-    comments.push({
+    const newComment = {
       createdAt: Timestamp.fromDate(new Date()),
       userId,
-      name: user?.displayName,
+      name: sessionStorage.getItem('uname'),
       body: userComment,
-    });
+    };
+    const updatedComments = [...comments, newComment];
     toast.success("Comment posted successfully");
     await updateDoc(doc(db, "blogs", id), {
-      ...blog,
-      comments,
+      comments: updatedComments,
       timestamp: serverTimestamp(),
     });
-    setComments(comments);
+    setComments(updatedComments);
     setUserComment("");
   };
 
   const handleLike = async () => {
     if (userId) {
-      if (blog?.likes) {
-        const index = likes.findIndex((id) => id === userId);
-        if (index === -1) {
-          likes.push(userId);
-          setLikes([...new Set(likes)]);
-        } else {
-          likes = likes.filter((id) => id !== userId);
-          setLikes(likes);
-        }
-      }
+      const updatedLikes = likes.includes(userId)
+        ? likes.filter((id) => id !== userId)
+        : [...likes, userId];
       await updateDoc(doc(db, "blogs", id), {
-        ...blog,
-        likes,
+        likes: updatedLikes,
         timestamp: serverTimestamp(),
       });
+      setLikes(updatedLikes);
     }
   };
 
-  console.log("relatedBlogs", relatedBlogs);
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
     <div className="single">
       <div
@@ -134,7 +134,7 @@ const Detail = ({ setActive, user }) => {
       >
         <div className="overlay"></div>
         <div className="blog-title">
-          <span>{blog?.timestamp.toDate().toDateString()}</span>
+          <span>{blog?.timestamp?.toDate()?.toDateString()}</span>
           <h2>{blog?.title}</h2>
         </div>
       </div>
@@ -144,7 +144,7 @@ const Detail = ({ setActive, user }) => {
             <div className="col-md-8">
               <span className="meta-info text-start">
                 By <p className="author">{blog?.author}</p> -&nbsp;
-                {blog?.timestamp.toDate().toDateString()}
+                {blog?.timestamp?.toDate()?.toDateString()}
                 <Like handleLike={handleLike} likes={likes} userId={userId} />
               </span>
               <p className="text-start">{blog?.description}</p>
@@ -164,7 +164,7 @@ const Detail = ({ setActive, user }) => {
                   ) : (
                     <>
                       {comments?.map((comment) => (
-                        <UserComments {...comment} />
+                        <UserComments key={comment.createdAt} {...comment} />
                       ))}
                     </>
                   )}

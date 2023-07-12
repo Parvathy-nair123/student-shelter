@@ -38,7 +38,7 @@ const BlogSection = ({
           <div className="short-description text-start">
             {excerpt(description, 120)}
           </div>
-          <Link to={`/Blog/detail/${id}`}>
+          <Link to={`/Community/detail/${id}`}>
             <button className="btn btn-read">Read More</button>
           </Link>
           {user && user.uid === userId && (
@@ -49,7 +49,7 @@ const BlogSection = ({
                 size="2x"
                 onClick={() => handleDelete(id)}
               />
-              <Link to={`/Blog/update/${id}`}>
+              <Link to={`/Community/update/${id}`}>
                 <FontAwesome
                   name="edit"
                   style={{ cursor: "pointer" }}

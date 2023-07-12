@@ -27,7 +27,7 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const Home = ({ setActive, user, active }) => {
+const Home = () => {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState([]);
   const [tags, setTags] = useState([]);
@@ -66,9 +66,7 @@ const Home = ({ setActive, user, active }) => {
         const uniqueTags = [...new Set(tags)];
         setTags(uniqueTags);
         setTotalBlogs(list);
-        // setBlogs(list);
         setLoading(false);
-        setActive("home");
       },
       (error) => {
         console.log(error);
@@ -79,23 +77,21 @@ const Home = ({ setActive, user, active }) => {
       unsub();
       getTrendingBlogs();
     };
-  }, [setActive, active]);
+  }, []);
 
   useEffect(() => {
     getBlogs();
     setHide(false);
-  }, [active]);
+  }, []);
 
   const getBlogs = async () => {
     const blogRef = collection(db, "blogs");
-    console.log(blogRef);
     const firstFour = query(blogRef, orderBy("title"), limit(4));
     const docSnapshot = await getDocs(firstFour);
     setBlogs(docSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     setLastVisible(docSnapshot.docs[docSnapshot.docs.length - 1]);
   };
 
-  console.log("blogs", blogs);
 
   const updateState = (docSnapshot) => {
     const isCollectionEmpty = docSnapshot.size === 0;
@@ -147,7 +143,6 @@ const Home = ({ setActive, user, active }) => {
     const combinedSearchBlogs = searchTitleBlogs.concat(searchTagBlogs);
     setBlogs(combinedSearchBlogs);
     setHide(true);
-    setActive("");
   };
 
   useEffect(() => {
@@ -221,7 +216,6 @@ const Home = ({ setActive, user, active }) => {
             {blogs?.map((blog) => (
               <BlogSection
                 key={blog.id}
-                user={user}
                 handleDelete={handleDelete}
                 {...blog}
               />

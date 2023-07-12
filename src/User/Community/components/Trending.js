@@ -32,7 +32,7 @@ const Trending = ({ blogs }) => {
       <OwlCarousel className="owl-theme" {...options}>
         {blogs?.map((item) => (
           <div className="item px-2" key={item.id}>
-            <Link to={`/Blog/detail/${item.id}`}>
+            <Link to={`/Community/detail/${item.id}`}>
               <div className="trending-img-position">
                 <div className="trending-img-size">
                   <img

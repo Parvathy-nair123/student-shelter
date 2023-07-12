@@ -11,7 +11,7 @@ const FeatureBlogs = ({ blogs, title }) => {
           className="row pb-3"
           key={item.id}
           style={{ cursor: "pointer" }}
-          onClick={() => navigate(`/Blog/detail/${item.id}`)}
+          onClick={() => navigate(`/Community/detail/${item.id}`)}
         >
           <div className="col-5 align-self-center">
             <img

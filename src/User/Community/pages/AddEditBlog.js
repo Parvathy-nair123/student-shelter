@@ -25,6 +25,10 @@ const initialState = {
 };
 
 const categoryOption = [
+  "Accommodation",
+  "Travel",
+  "Studies",
+  "Colleges",
   "Fashion",
   "Technology",
   "Food",
@@ -33,7 +37,7 @@ const categoryOption = [
   "Business",
 ];
 
-const AddEditBlog = ({ user, setActive }) => {
+const AddEditBlog = ({ setActive }) => {
   const [form, setForm] = useState(initialState);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(null);
@@ -119,8 +123,8 @@ const AddEditBlog = ({ user, setActive }) => {
           await addDoc(collection(db, "blogs"), {
             ...form,
             timestamp: serverTimestamp(),
-            author: user.displayName,
-            userId: user.uid,
+            author: sessionStorage.getItem('uname'),
+            userId: sessionStorage.getItem('uid'),
           });
           toast.success("Blog created successfully");
         } catch (err) {
@@ -131,8 +135,8 @@ const AddEditBlog = ({ user, setActive }) => {
           await updateDoc(doc(db, "blogs", id), {
             ...form,
             timestamp: serverTimestamp(),
-            author: user.displayName,
-            userId: user.uid,
+            author: sessionStorage.getItem('uname'),
+            userId: sessionStorage.getItem('uid'),
           });
           toast.success("Blog updated successfully");
         } catch (err) {
@@ -143,7 +147,7 @@ const AddEditBlog = ({ user, setActive }) => {
       return toast.error("All fields are mandatory to fill");
     }
 
-    navigate("/Blog");
+    navigate("/Community/Blog");
   };
 
   return (

@@ -1,8 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
-const CommentBox = ({ userId, userComment, setUserComment, handleComment }) => {
-  const navigate = useNavigate();
+const CommentBox = ({ userComment, setUserComment, handleComment }) => {
+
   return (
     <>
       <form className="row blog-form">
@@ -15,24 +14,14 @@ const CommentBox = ({ userId, userComment, setUserComment, handleComment }) => {
           />
         </div>
       </form>
-      {!userId ? (
-        <>
-          <h5>Please login or Create an account to post comment</h5>
-          <button className="btn btn-success" onClick={() => navigate("/auth")}>
-            Login
-          </button>
-        </>
-      ) : (
-        <>
-          <button
-            className="btn btn-primary"
-            type="submit"
-            onClick={handleComment}
-          >
-            Post Comment
-          </button>
-        </>
-      )}
+
+      <button
+        className="btn btn-primary"
+        type="submit"
+        onClick={handleComment}
+      >
+        Post Comment
+      </button>
     </>
   );
 };

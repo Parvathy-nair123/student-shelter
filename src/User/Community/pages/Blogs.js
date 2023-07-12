@@ -28,7 +28,6 @@ const Blogs = ({setActive}) => {
   useEffect(() => {
     getBlogsData();
     getTotalBlogs();
-    setActive("blogs");
   }, []);
 
   if (loading) {

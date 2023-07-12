@@ -7,9 +7,9 @@ const Search = ({ search, handleChange }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (search) {
-      navigate(`/Blog/search?searchQuery=${search}`);
+      navigate(`/Community/search?searchQuery=${search}`);
     } else {
-      navigate("/Blog");
+      navigate("/Community");
     }
   };
 

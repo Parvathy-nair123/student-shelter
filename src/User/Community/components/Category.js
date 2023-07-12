@@ -10,7 +10,7 @@ const Category = ({ catgBlogsCount }) => {
           {catgBlogsCount?.map((item, index) => (
             <li key={index}>
               <Link
-                to={`/Blog/category/${item.category}`}
+                to={`/Community/category/${item.category}`}
                 style={{ textDecoration: "none", float: "left", color: "#777" }}
               >
                 {item.category}

@@ -15,42 +15,37 @@ import ScrollToTop from "./components/ScrollToTop";
 import Blogs from "./pages/Blogs";
 
 function App() {
-  const [active, setActive] = useState("timeline");
 
   return (
     <div className="BlogApp">
-      <Header
-        setActive={setActive}
-        active={active}
-
-      />
+      <Header />
       <ScrollToTop />
       <Routes>
         <Route
           path="/"
-          element={<Home setActive={setActive} active={active} />}
+          element={<Home />}
         />
         <Route
           path="/search"
-          element={<Home setActive={setActive} />}
+          element={<Home />}
         />
         <Route
           path="/detail/:id"
-          element={<Detail setActive={setActive} />}
+          element={<Detail />}
         />
         <Route
           path="/create"
-          element={<AddEditBlog setActive={setActive} />}
+          element={<AddEditBlog />}
         />
         <Route
           path="/update/:id"
           element={
-            <AddEditBlog setActive={setActive} />
+            <AddEditBlog />
           }
         />
-        <Route path="/blogs" element={<Blogs setActive={setActive} />} />
-        <Route path="/tag/:tag" element={<TagBlog setActive={setActive} />} />
-        <Route path="/category/:category" element={<CategoryBlog setActive={setActive} />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/tag/:tag" element={<TagBlog />} />
+        <Route path="/category/:category" element={<CategoryBlog />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

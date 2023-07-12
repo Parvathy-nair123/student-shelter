@@ -8,7 +8,7 @@ const Tags = ({ tags }) => {
         {tags?.map((tag, index) => (
           <p className="tag" key={index}>
             <Link
-              to={`/Blog/tag/${tag}`}
+              to={`/Community/tag/${tag}`}
               style={{ textDecoration: "none", color: "black" }}
             >
               {tag}
