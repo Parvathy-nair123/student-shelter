@@ -27,7 +27,8 @@ const Search = () => {
         query(
           collection(db, "properties"),
           where("property_place", ">=", searchQuery),
-          where("property_place", "<=", searchQuery + "\uf8ff")
+          where("property_place", "<=", searchQuery + "\uf8ff"),
+          where("property_status", "==", 1)
         )
       );
 
@@ -39,7 +40,8 @@ const Search = () => {
             "property_place",
             "<=",
             capitalizeFirstLetter(searchQuery) + "\uf8ff"
-          )
+          ),
+          where("property_status", "==", 1)
         )
       );
 
@@ -47,7 +49,8 @@ const Search = () => {
         query(
           collection(db, "properties"),
           where("property_place", ">=", searchQuery.toUpperCase()),
-          where("property_place", "<=", searchQuery.toUpperCase() + "\uf8ff")
+          where("property_place", "<=", searchQuery.toUpperCase() + "\uf8ff"),
+          where("property_status", "==", 1)
         )
       );
 
@@ -103,11 +106,14 @@ const Search = () => {
     if (rent !== "") {
       queryRef = query(queryRef, where("property_renttype", "==", rent));
     }
+
+    queryRef = query(queryRef, where("property_status", "==", 1));
     const houseQuerySnapshot = await getDocs(queryRef);
     const data = houseQuerySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
     setPropertyList(data);
   };
   return (
@@ -213,30 +219,36 @@ const Search = () => {
             <button onClick={searchRooms}>Search</button>
           </div>
           <div className="listResult">
-            {propertyList.map((item, key) => (
-              <div
-                className="searchItem"
-                onClick={() => viewProperty(item.id)}
-                key={key}
-              >
-                {item.property_photos && item.property_photos.length > 0 && (
-                  <img src={item.property_photos[0]} className="siImg" />
-                )}
-                <div className="siDesc">
-                  <h1 className="siTitle">{item.property_name}</h1>
-                  <span className="siSubtitle">{item.property_place}</span>
-                  <span className="siFeatures">
-                    • {item.property_rooms} rooms • {item.property_bathrooms}{" "}
-                    bathrooms • {item.property_kitchen} Kitchen
-                  </span>
-                </div>
-                <div className="siDetails">
-                  <div className="siDetailTexts">
-                    <span className="siPrice">${item.property_price}</span>
+            {propertyList.length === 0 ? (
+              <div className="searchItem">
+                <h3>No Properties Found</h3>
+              </div>
+            ) : (
+              propertyList.map((item, key) => (
+                <div
+                  className="searchItem"
+                  onClick={() => viewProperty(item.id)}
+                  key={key}
+                >
+                  {item.property_photos && item.property_photos.length > 0 && (
+                    <img src={item.property_photos[0]} className="siImg" />
+                  )}
+                  <div className="siDesc">
+                    <h1 className="siTitle">{item.property_name}</h1>
+                    <span className="siSubtitle">{item.property_place}</span>
+                    <span className="siFeatures">
+                      • {item.property_rooms} rooms • {item.property_bathrooms}{" "}
+                      bathrooms • {item.property_kitchen} Kitchen
+                    </span>
+                  </div>
+                  <div className="siDetails">
+                    <div className="siDetailTexts">
+                      <span className="siPrice">${item.property_price}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

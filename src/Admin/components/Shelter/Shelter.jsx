@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,37 +6,60 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { Modal, Box, Typography, Button } from "@mui/material";
 import "./Shelter.css";
-import { collection, deleteDoc, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../../config/firebase";
 
-
 export default function BasicTable() {
-  const [propertiesList, setPropertiesList] = React.useState([]);
+  const [propertiesList, setPropertiesList] = useState([]);
+  const [selectedProperty, setSelectedProperty] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getProperties();
   }, []);
 
   const getProperties = async () => {
-    const propertiesSnapshot = await getDocs(query(collection(db, "properties")));
-    const data = propertiesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const propertiesSnapshot = await getDocs(
+      query(collection(db, "properties"))
+    );
+    const data = propertiesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     setPropertiesList(data);
+  };
+
+  const handleViewMore = (property) => {
+    setSelectedProperty(property);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProperty(null);
   };
 
   const handleApprove = async (docId) => {
     const propertyRef = doc(db, "properties", docId);
     await updateDoc(propertyRef, {
-      property_status: 1
+      property_status: 1,
     });
     // Refresh the properties list
     getProperties();
+    setSelectedProperty(null);
   };
 
   const handleDelete = async (docId) => {
     const propertyRef = doc(db, "properties", docId);
     await deleteDoc(propertyRef);
     // Refresh the properties list
+    setSelectedProperty(null);
     getProperties();
   };
 
@@ -47,7 +70,10 @@ export default function BasicTable() {
         component={Paper}
         style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
       >
-        <Table sx={{ minWidth: 650, overflowY: "scroll" }} aria-label="simple table">
+        <Table
+          sx={{ minWidth: 650, overflowY: "scroll" }}
+          aria-label="simple table"
+        >
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
@@ -76,38 +102,110 @@ export default function BasicTable() {
                   <span className="status">{row.property_rooms}</span>
                 </TableCell>
                 <TableCell align="left" className="Details">
-                  {row.property_status === 0 ? (
-                    <>
-                      <button
-                        className="approve-button"
-                        onClick={() => handleApprove(row.id)}
-                      >
-                        Approve
-                      </button>{" "}
-                      |{" "}
-                      <button
-                        className="delete-button"
-                        onClick={() => handleDelete(row.id)}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="delete-button"
-                        onClick={() => handleDelete(row.id)}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
+                  <button
+                    className="view-more-button"
+                    onClick={() => handleViewMore(row)}
+                  >
+                    View More
+                  </button>{" "}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Modal
+        open={!!selectedProperty}
+        onClose={handleCloseModal}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            width: 600,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          {/* Property Details */}
+          {selectedProperty && (
+            <>
+              <Typography variant="h5" component="h2" gutterBottom>
+                {selectedProperty.property_name}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Location: {selectedProperty.property_place}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Price: {selectedProperty.property_price}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Rooms: {selectedProperty.property_rooms}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Furnished: {selectedProperty.property_furnished ? "Yes" : "No"}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Kitchen: {selectedProperty.property_kitchen}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Details: {selectedProperty.property_details}
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Property Photos
+              </Typography>
+              {selectedProperty.property_photos.map((photo, index) => (
+                <img
+                  key={index}
+                  src={photo}
+                  width="120"
+                  height="120"
+                  alt={`Property Photo ${index + 1}`}
+                />
+              ))}
+
+              {/* Approve and Delete Buttons */}
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
+              >
+                {selectedProperty.property_status == 1 ? (
+                  ""
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleApprove(selectedProperty.id)}
+                  >
+                    Approve
+                  </Button>
+                )}
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleDelete(selectedProperty.id)}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </>
+          )}
+
+          {/* Close Button */}
+          <Button
+            onClick={handleCloseModal}
+            sx={{ position: "absolute", top: 0, right: 0 }}
+          >
+            X
+          </Button>
+        </Box>
+      </Modal>
     </div>
   );
 }

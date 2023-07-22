@@ -81,3 +81,20 @@
     font-size: 15px;
     text:"Saved";
 }
+
+.viewButton{
+    height: 40px;
+    width: 175px;
+    display: flex;
+    background: rgb(228, 227, 227);
+    color: blue;
+    border-radius: 5px;
+    box-shadow: 6px 6px 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.viewButton>a{
+    color: blue;
+    text-decoration: none;
+}

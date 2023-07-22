@@ -4,6 +4,7 @@ import "../../../Common/Style/ViewMore.css";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
+  serverTimestamp,
   addDoc,
   collection,
   deleteDoc,
@@ -122,6 +123,56 @@ export default function ViewMore() {
     }
   };
 
+  const sendRequest = async () => {
+    try {
+      if (!uid) {
+        toast.error("Please log in to send a request.", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        return;
+      }
+      const requestData = {
+        property_id: propID,
+        user_id: uid,
+        timestamp: serverTimestamp(),
+      };
+      await addDoc(collection(db, "requests"), requestData);
+
+      toast.success("Request sent successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } catch (error) {
+      console.error("Error sending request:", error);
+      toast.error(
+        "An error occurred while sending the request. Please try again.",
+        {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    }
+  };
+
   return (
     <div className="view-container">
       <div className="view-row left-side-view">
@@ -189,31 +240,43 @@ export default function ViewMore() {
           <table className="view-table">
             <tbody>
               <tr>
-                <td colSpan={2} align="center">
-                  <i class="material-icons">phone</i>
-                  <a href={`tel:${call}`} className="view-link">
-                    Call Agent
-                  </a>
+                <td>
+                  <div className="viewButton">
+                    <a href={`tel:${call}`} className="view-link">
+                      Call Agent
+                    </a>
+                    <i class="material-icons">phone</i>
+                  </div>
+                </td>
+                <td>
+                  <div className="viewButton">
+                    <a href={`mailto:${email}`} className="view-link">
+                      Email Agent
+                    </a>
+                    <i class="material-icons">email</i>
+                  </div>
                 </td>
               </tr>
               <tr>
-                <td colSpan={2} align="center">
-                  <i class="material-icons">email</i>{" "}
-                  <a href={`mailto:${email}`} className="view-link">
-                    Email Agent
-                  </a>
+                <td>
+                  <div className="viewButton">
+                    <button
+                      onClick={addtoSave}
+                      className={`view-button ${isSaved ? "saved" : ""}`}
+                      disabled={!uid}
+                    >
+                      {isSaved ? "Saved" : "Save"}
+                    </button>
+                    <i className="material-icons">save</i>
+                  </div>
                 </td>
-              </tr>
-              <tr>
-                <td colSpan={2} align="center">
-                  <i className="material-icons">save</i>{" "}
-                  <button
-                    onClick={addtoSave}
-                    className={`view-button ${isSaved ? "saved" : ""}`}
-                    disabled={!uid}
-                  >
-                    {isSaved ? "Saved" : "Save"}
-                  </button>
+                <td>
+                  <div className="viewButton">
+                    <button className="view-button" onClick={sendRequest}>
+                      Send Request
+                    </button>
+                    <i class="material-icons">send</i>
+                  </div>
                 </td>
               </tr>
             </tbody>

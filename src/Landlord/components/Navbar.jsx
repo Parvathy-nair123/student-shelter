@@ -22,6 +22,9 @@ const Navbar = () => {
           <button className="navButton">
             <Link to={"/Landlord/ViewProperty"}>View Property</Link>
           </button>
+          <button className="navButton">
+            <Link to={"/Landlord/ViewRequests"}>View Requests</Link>
+          </button>
           <button className="navButton" onClick={logoutLandlord}>
             Logout
           </button>

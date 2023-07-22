@@ -7,15 +7,19 @@ import "../../Common/Style/styles.css";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db, storage } from "../../config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
 const AddPropertyForm = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [place, setPlace] = useState("");
   const [pincode, setPincode] = useState("");
   const [details, setDetails] = useState("");
-  const [photos, setPhotos] = useState([]); 
+  const [photos, setPhotos] = useState([]);
   const [rooms, setRooms] = useState("");
   const [kitchen, setKitchen] = useState("");
   const [bathrooms, setBathrooms] = useState("");
@@ -107,7 +111,7 @@ const AddPropertyForm = () => {
       property_latitude: selectedLatitude,
       property_longitude: selectedLongitude,
       property_details: details,
-      property_photos: imageUrls, 
+      property_photos: imageUrls,
       property_rooms: rooms,
       property_kitchen: kitchen,
       property_bathrooms: bathrooms,
@@ -121,6 +125,18 @@ const AddPropertyForm = () => {
     setIsLoading(false);
     setFormErrors([]);
     setFormSuccess(true);
+
+    toast.success("Added successfully", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+    navigate("/Landlord");
   };
 
   const handlePhotoChange = (event) => {
@@ -192,11 +208,10 @@ const AddPropertyForm = () => {
           <div className="col">
             <label>Pincode:</label>
             <input
-              type="number"
+              type="text"
               value={pincode}
               onChange={(e) => setPincode(e.target.value)}
               required
-              pattern="\d{6}"
             />
           </div>
         </div>
