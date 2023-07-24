@@ -7,6 +7,7 @@ import AddProperty from "./pages/AddProperty";
 import ViewProperty from "./pages/ViewProperty";
 import Properties from "../Common/Page/Properties";
 import ViewRequests from "./pages/ViewRequest";
+import UpdatePropertyForm from "./pages/UpdateProperty";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/AddProperty" element={<AddProperty />} />
           <Route path="/ViewProperty" element={<ViewProperty />} />
           <Route path="/ViewRequests" element={<ViewRequests />} />
+          <Route path="/UpdateProperty/:uid" element={<UpdatePropertyForm />} />
         </Routes>
         <MailList />
         <Footer />

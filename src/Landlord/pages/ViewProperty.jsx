@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function ViewProperty() {
   const [propertyList, setPropertyList] = useState([]);
@@ -40,6 +41,9 @@ export default function ViewProperty() {
       prevPropertyList.filter((property) => property.property_id !== propertyId)
     );
   };
+
+  const handleEdit = async (propertyId) => {};
+
   return (
     <table className="property-table">
       <thead>
@@ -70,6 +74,12 @@ export default function ViewProperty() {
                 onClick={() => handleDelete(item.propertyId)}
               >
                 Delete
+              </button>
+              &nbsp;
+              <button className="deleteButton">
+                <Link to={`/Landlord/UpdateProperty/${item.propertyId}`}>
+                  Edit
+                </Link>
               </button>
             </td>
           </tr>

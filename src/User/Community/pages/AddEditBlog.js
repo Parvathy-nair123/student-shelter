@@ -147,7 +147,7 @@ const AddEditBlog = ({ setActive }) => {
       return toast.error("All fields are mandatory to fill");
     }
 
-    navigate("/Community/Blog");
+    navigate("/Community");
   };
 
   return (

@@ -75,7 +75,7 @@ const Favourite = () => {
           key={key}
           onClick={() => viewProperty(id[key])}
         >
-          <img src={item.property_photo} alt="" className="siImg" />
+          <img src={item.property_photos[0]} alt="" className="siImg" />
           <div className="siDesc">
             <h1 className="siTitle">{item.property_name}</h1>
             <span className="siSubtitle">{item.property_place}</span>
