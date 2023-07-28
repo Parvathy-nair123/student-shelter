@@ -7,8 +7,10 @@ import {
   getDocs,
   doc,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { toast } from "react-toastify";
 
 export default function ViewRequests() {
   const [properties, setProperties] = useState([]);
@@ -58,21 +60,23 @@ export default function ViewRequests() {
               .find((requestDoc) => requestDoc.id === requestId)
               ?.data().user_id;
 
-
             if (requestSenderUserId) {
-                const userQuerySnapshot = await getDocs(
-                    query(collection(db, "users"), where("user_id", "==", requestSenderUserId))
-                  );
+              const userQuerySnapshot = await getDocs(
+                query(
+                  collection(db, "users"),
+                  where("user_id", "==", requestSenderUserId)
+                )
+              );
               if (!userQuerySnapshot.empty) {
-              const userData = userQuerySnapshot.docs[0].data();
-              propertiesWithRequests.push({
-                id: propertyDoc.id,
-                property_name: propertyData.property_name,
-                user_name: userData ? userData.user_name : "N/A",
-                user_contact: userData ? userData.user_contact : "N/A",
-                user_email: userData ? userData.user_email : "N/A",
-              });
-            }
+                const userData = userQuerySnapshot.docs[0].data();
+                propertiesWithRequests.push({
+                  id: propertyDoc.id,
+                  property_name: propertyData.property_name,
+                  user_name: userData ? userData.user_name : "N/A",
+                  user_contact: userData ? userData.user_contact : "N/A",
+                  user_email: userData ? userData.user_email : "N/A",
+                });
+              }
             }
           }
         })
@@ -81,6 +85,27 @@ export default function ViewRequests() {
       setProperties(propertiesWithRequests);
     } catch (error) {
       console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleDelete = async (propertyId) => {
+    try {
+      await deleteDoc(doc(db, "properties", propertyId));
+      setProperties((prevProperties) =>
+        prevProperties.filter((property) => property.id !== propertyId)
+      );
+      toast.success("Deleted successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } catch (error) {
+      console.error("Error deleting property:", error);
     }
   };
 
@@ -93,6 +118,7 @@ export default function ViewRequests() {
           <th>User</th>
           <th>Contact</th>
           <th>Email</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -103,6 +129,9 @@ export default function ViewRequests() {
             <td>{property.user_name}</td>
             <td>{property.user_contact}</td>
             <td>{property.user_email}</td>
+            <td>
+              <button onClick={() => handleDelete(property.id)}>Delete</button>
+            </td>
           </tr>
         ))}
       </tbody>

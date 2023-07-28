@@ -50,7 +50,7 @@ const AddEditBlog = ({ setActive }) => {
 
   useEffect(() => {
     const uploadFile = () => {
-      const storageRef = ref(storage, file.name);
+      const storageRef = ref(storage, `blog/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
         "state_changed",
