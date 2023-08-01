@@ -37,7 +37,7 @@ const categoryOption = [
   "Business",
 ];
 
-const AddEditBlog = ({ setActive }) => {
+const AddEditBlog = () => {
   const [form, setForm] = useState(initialState);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(null);
@@ -96,7 +96,7 @@ const AddEditBlog = ({ setActive }) => {
     if (snapshot.exists()) {
       setForm({ ...snapshot.data() });
     }
-    setActive(null);
+
   };
 
   const handleChange = (e) => {

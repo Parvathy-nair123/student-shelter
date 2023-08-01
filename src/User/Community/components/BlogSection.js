@@ -12,7 +12,6 @@ const BlogSection = ({
   userId,
   author,
   timestamp,
-  user,
   handleDelete,
 }) => {
   return (
@@ -41,7 +40,7 @@ const BlogSection = ({
           <Link to={`/Community/detail/${id}`}>
             <button className="btn btn-read">Read More</button>
           </Link>
-          {user && user.uid === userId && (
+          {sessionStorage.getItem("uid") === userId && (
             <div style={{ float: "right" }}>
               <FontAwesome
                 name="trash"

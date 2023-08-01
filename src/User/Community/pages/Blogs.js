@@ -1,5 +1,7 @@
 import {
   collection,
+  deleteDoc,
+  doc,
   endAt,
   endBefore,
   getDocs,
@@ -16,14 +18,36 @@ import BlogSection from "../components/BlogSection";
 import Pagination from "../components/Pagination";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase";
+import { toast } from "react-toastify";
 
-const Blogs = ({setActive}) => {
+const Blogs = () => {
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [lastVisible, setLastVisible] = useState(null);
   const [noOfPages, setNoOfPages] = useState(null);
   const [count, setCount] = useState(null);
+
+  const handleDelete = async (blogId) => {
+    try {
+      await deleteDoc(doc(db, "blogs", blogId));
+      setBlogs((prevBlogs) =>
+        prevBlogs.filter((blog) => blog.id !== blogId)
+      );
+      toast.success("Deleted successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } catch (error) {
+      console.error("Error deleting property:", error);
+    }
+  };
 
   useEffect(() => {
     getBlogsData();
@@ -79,8 +103,8 @@ const Blogs = ({setActive}) => {
       noOfPages !== currentPage
         ? limit(4)
         : count <= 4 && noOfPages % 2 === 0
-        ? limit(4)
-        : limitToLast(4);
+          ? limit(4)
+          : limitToLast(4);
     const prevBlogsQuery = query(blogRef, orderBy("title"), end, limitData);
     const prevBlogsSnaphot = await getDocs(prevBlogsQuery);
     setBlogs(
@@ -107,7 +131,7 @@ const Blogs = ({setActive}) => {
           <div className="blog-heading text-center py-2 mb-4">Daily Blogs</div>
           {blogs?.map((blog) => (
             <div className="col-md-6" key={blog.id}>
-              <BlogSection {...blog} />
+              <BlogSection {...blog} handleDelete={handleDelete} />
             </div>
           ))}
         </div>

@@ -119,12 +119,12 @@ export default function BasicTable() {
         open={!!selectedProperty}
         onClose={handleCloseModal}
         sx={{
-          margin:"10px",
-          padding:"10px",
+          margin: "10px",
+          padding: "10px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          overflow: "scroll"
+          overflow: "scroll",
         }}
       >
         <Box
@@ -135,6 +135,8 @@ export default function BasicTable() {
             border: "2px solid #000",
             boxShadow: 24,
             p: 4,
+            maxHeight: "90vh",
+            overflowY: "auto",
           }}
         >
           {/* Property Details */}
